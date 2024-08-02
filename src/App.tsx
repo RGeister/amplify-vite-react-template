@@ -3,7 +3,6 @@ import type { Schema } from '../amplify/data/resource'
 import { generateClient } from 'aws-amplify/data'
 import { Authenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
-// import { AuthUser } from 'aws-amplify/auth'
 import { uploadData } from 'aws-amplify/storage'
 
 const client = generateClient<Schema>()
