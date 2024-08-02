@@ -3,7 +3,8 @@ import type { Schema } from '../amplify/data/resource'
 import { generateClient } from 'aws-amplify/data'
 import { Authenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
-import { AuthUser } from 'aws-amplify/auth'
+// import { AuthUser } from 'aws-amplify/auth'
+import { uploadData } from 'aws-amplify/storage'
 
 const client = generateClient<Schema>()
 
@@ -84,6 +85,12 @@ function App () {
     client.models.Todo.delete({ id })
   }
 
+  const [file, setFile] = useState()
+
+  const handleChange = (event: any) => {
+    setFile(event.target.files[0])
+  }
+
   return (
     <Authenticator>
       {({ signOut, user }) => (
@@ -103,6 +110,20 @@ function App () {
             <a href='https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates'>
               Review next step of this tutorial.
             </a>
+          </div>
+
+          <div>
+            <input type='file' onChange={handleChange} />
+            <button
+              onClick={() =>
+                uploadData({
+                  path: `picture-submissions/${file.name}`,
+                  data: file
+                })
+              }
+            >
+              Upload
+            </button>
           </div>
 
           <button onClick={signOut}>Sign out</button>
