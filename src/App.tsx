@@ -2,9 +2,10 @@
 import { useEffect, useState } from 'react'
 import type { Schema } from '../amplify/data/resource'
 import { generateClient } from 'aws-amplify/data'
-import { Authenticator } from '@aws-amplify/ui-react'
+import { Authenticator, Button } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
-import { uploadData } from 'aws-amplify/storage'
+import { uploadData, list, downloadData  } from 'aws-amplify/storage'
+import ExampleComponent from './ExampleComponent'
 
 const client = generateClient<Schema>()
 
@@ -70,11 +71,16 @@ const client = generateClient<Schema>()
 
 function App () {
   const [todos, setTodos] = useState<Array<Schema['Todo']['type']>>([])
+  const [files, setFiles] = useState([])
 
   useEffect(() => {
     client.models.Todo.observeQuery().subscribe({
       next: data => setTodos([...data.items])
     })
+
+    // client.queries.sayHello({
+    //   name: 'Amplify'
+    // })
   }, [])
 
   function createTodo () {
@@ -91,6 +97,28 @@ function App () {
     setFile(event.target.files[0])
   }
 
+  const listFiles = async () => {
+    const result = await list({
+      path: 'picture-submissions/'
+      // Alternatively, path: ({identityId}) => `album/{identityId}/photos/`
+    })
+    console.log('FILES:', result)
+    setFiles(result)
+  }
+
+  const downloadFile = async () => {
+    try {
+      const downloadResult = await downloadData({
+        path: files.items[0].path
+      }).result
+      const text = await downloadResult.body.text()
+      // Alternatively, you can use `downloadResult.body.blob()`
+      // or `downloadResult.body.json()` get read body in Blob or JSON format.
+      console.log('Succeed: ', text)
+    } catch (error) {
+      console.log('Error : ', error)
+    }
+  }
 
   return (
     <Authenticator>
@@ -115,7 +143,7 @@ function App () {
 
           <div>
             <input type='file' onChange={handleChange} />
-            <button
+            <Button
               onClick={() =>
                 uploadData({
                   path: `picture-submissions/${file?.name}`,
@@ -124,9 +152,12 @@ function App () {
               }
             >
               Upload
-            </button>
+            </Button>
+            <Button onClick={listFiles}>List Files</Button>
+            <Button onClick={downloadFile}>Download File</Button>
           </div>
 
+              <ExampleComponent />
           <button onClick={signOut}>Sign out</button>
         </main>
       )}
