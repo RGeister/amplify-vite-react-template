@@ -55,8 +55,8 @@ function App () {
     client.models.Todo.delete({ id })
   }
 
-  function handleSayHello () {
-    const result = client.queries.sayHello({
+  async function handleSayHello () {
+    const result = await client.queries.sayHello({
       name: 'Amplify'
     })
     console.log('say-Hello', result)
