@@ -62,6 +62,13 @@ function App () {
     console.log('say-Hello', result)
   }
 
+  async function handleGetUser () {
+    const result = await client.queries.getUser({
+      id: 1000
+    })
+    console.log('get-user', result)
+  }
+
   return (
     <Authenticator>
       {({ signOut, user }) => (
@@ -113,7 +120,10 @@ function App () {
                     labelHidden
                   />
                   <Button variation='primary' onClick={handleSayHello}>
-                    Add to cart
+                    Say Hello
+                  </Button>
+                  <Button variation='primary' onClick={handleGetUser}>
+                    Get User
                   </Button>
                 </Flex>
               </Flex>
