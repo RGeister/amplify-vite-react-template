@@ -1,9 +1,6 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend'
 import { sayHello } from "../functions/say-hello/resource"
-<<<<<<< HEAD
-=======
 import { getUser } from '../functions/get-user/resource'
->>>>>>> dev
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -12,7 +9,6 @@ specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
-
   Todo: a
     .model({
       content: a.string(),
@@ -53,22 +49,6 @@ export const data = defineData({
     defaultAuthorizationMode: 'userPool'
   }
 })
-
-
-const schema2 = a.schema({
-
-  sayHello: a
-    .query()
-    .arguments({
-      name: a.string().default("World"),
-    })
-    .returns(a.string())
-    .handler(a.handler.function(sayHello)),
-})
-
-export type Schema2 = ClientSchema<typeof schema2>
-
-
 
 /*== STEP 2 ===============================================================
 Go to your frontend source code. From your client-side code, generate a

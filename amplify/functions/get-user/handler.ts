@@ -3,7 +3,6 @@ import type { Schema } from "../../data/resource"
 //@ts-ignore
 import { executeQuery } from './query';
 
-
 export const handler: Schema["getUser"]["functionHandler"] = async (event) => {
   // arguments typed from `.arguments()`
   const { id } = event.arguments
