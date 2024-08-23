@@ -18,14 +18,29 @@ const client = generateClient<Schema>()
 function App () {
   const [todos, setTodos] = useState<Array<Schema['Todo']['type']>>([])
 
-  // const fetchTodos = async () => {
+  const fetchTodos = async () => {
+    const { data: items, errors } = await client.models.Todo.list()
+    if (errors) {
+      console.log('errors', errors)
+    } else {
+      console.log('DATA:', items)
+    }
+    setTodos(items)
+  }
+
+  // async function fetchTodos2 () {
   //   const { data: items, errors } = await client.models.Todo.list()
   //   console.log('errors', errors)
   //   setTodos(items)
   // }
 
+  const pollData = () => {
+    setTimeout(fetchTodos, 5000)
+  }
+
   useEffect(() => {
     // fetchTodos()
+
     const sub = client.models.Todo.observeQuery().subscribe({
       next: data => setTodos([...data.items])
     })
@@ -37,6 +52,8 @@ function App () {
     })
 
     client.models.Todo.onCreate()
+
+    pollData()
 
     return () => {
       createSub.unsubscribe()
@@ -67,6 +84,10 @@ function App () {
       id: 1000
     })
     console.log('get-user', result)
+  }
+
+  async function handleUpdate () {
+    fetchTodos()
   }
 
   return (
@@ -124,6 +145,10 @@ function App () {
                   </Button>
                   <Button variation='primary' onClick={handleGetUser}>
                     Get User
+                  </Button>
+
+                  <Button variation='primary' onClick={handleUpdate}>
+                    Update
                   </Button>
                 </Flex>
               </Flex>
